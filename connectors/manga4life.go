@@ -17,23 +17,24 @@ func (m Manga4lifeConnector) GetParametersFromBody(r io.ReadCloser) (title, path
 	regex := regexp.MustCompile(`=\s.*?;`)
 
 	for s.Scan() {
-		if strings.Contains(s.Text(), "MainFunction") {
+		line := s.Text()
+		if strings.Contains(line, "MainFunction") {
 			inMainFunc = true
 		}
 		if !inMainFunc {
 			continue
 		}
 
-		if strings.Contains(s.Text(), "CurPathName") {
-			path = clearString(regex.FindString(s.Text()))
+		if strings.Contains(line, "CurPathName") {
+			path = clearString(regex.FindString(line))
 			filledVars++
 		}
-		if strings.Contains(s.Text(), "IndexName") {
-			title = clearString(regex.FindString(s.Text()))
+		if strings.Contains(line, "IndexName") {
+			title = clearString(regex.FindString(line))
 			filledVars++
 		}
-		if strings.Contains(s.Text(), "CurChapter") {
-			currentChapter = getChapter(clearString(regex.FindString(s.Text())))
+		if strings.Contains(line, "CurChapter") {
+			currentChapter = getChapter(clearString(regex.FindString(line)))
 			filledVars++
 		}
 
